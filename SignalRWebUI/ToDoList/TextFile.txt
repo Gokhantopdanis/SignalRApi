@@ -1,0 +1,64 @@
+﻿--CategoryCount
+--ProductCount
+--Akrif Kategori Sayısı
+--Pasif Kategori Sayısı
+
+--Kategori Adına Göre Ürün Sayısı1
+--Kategori Adına Göre Ürün Sayısı2
+
+--Ortalama Fiyat
+--En Düşük Ürünlü Fiyat
+--En Yüksek Ürünlü Fiyat
+--Ortalama Hamburger Fiyatı
+
+--Toplam Sipariş Sayısı
+--Aktif Sipariş Sayısı
+--Son Sipariş Tutarı
+--Kasadaki Tutar
+--Bugünkü Kazanç
+--Masa Sayısı
+
+
+
+
+
+CREATE TRIGGER IncreaseOrderTotalPrice
+ON OrderDetails
+AFTER INSERT
+AS
+Declare @OrderID int
+Declare @OrderPrice decimal
+Select @OrderID=OrderID from inserted
+Select @OrderPrice=TotalPrice from inserted
+Update Orders Set TotalPrice =TotalPrice +@OrderPrice where OrderID=@OrderID
+
+
+
+
+Create TRIGGER DecreaseOrderTotalPrice
+ON OrderDetails
+AFTER Delete
+AS
+Declare @OrderID int
+Declare @OrderPrice decimal
+Select @OrderID=OrderID from deleted
+Select @OrderPrice=TotalPrice from deleted
+Update Orders Set TotalPrice =TotalPrice -@OrderPrice where OrderID=@OrderID
+
+
+
+
+Create TRIGGER SumMoneyCases
+ON Orders
+AFTER Update
+AS
+Declare @Description Nvarchar(Max)
+Declare @OrderID int
+Declare @TotalPrice Decimal(18,2)
+Select @Description = Description From inserted
+Select @OrderID=OrderID From inserted
+Select @TotalPrice=TotalPrice from inserted
+if(@Description='Hesap Kapatıldı')
+Begin
+Update MoneyCases Set TotalAmount=TotalAmount + @TotalPrice
+End
