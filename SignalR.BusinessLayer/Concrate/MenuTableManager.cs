@@ -19,22 +19,22 @@ namespace SignalR.DataAccessLayer.Abstract
 
         public void Tadd(MenuTable entity)
         {
-            throw new NotImplementedException();
+            _menuTableDal.Add(entity);
         }
 
         public void TDelete(MenuTable entity)
         {
-            throw new NotImplementedException();
+            _menuTableDal.Delete(entity);
         }
 
         public MenuTable TGetById(int id)
         {
-            throw new NotImplementedException();
+            return _menuTableDal.GetByID(id);
         }
 
         public List<MenuTable> TGetListAll()
         {
-            throw new NotImplementedException();
+            return _menuTableDal.GetListAll();
         }
 
         public int TMenuTableCount()
@@ -44,7 +44,7 @@ namespace SignalR.DataAccessLayer.Abstract
 
         public void Tupdate(MenuTable entity)
         {
-            throw new NotImplementedException();
+            _menuTableDal.Update(entity);
         }
     }
 }
