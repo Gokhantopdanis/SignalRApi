@@ -100,6 +100,7 @@ namespace SignalRWebUI.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateProduct(UpdateProductDtos updateProductDtos)
         {
+            updateProductDtos.ProductStatus = true;
             var client = _httpClientFactory.CreateClient();
             var jsonData = JsonConvert.SerializeObject(updateProductDtos);
             StringContent stringContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
