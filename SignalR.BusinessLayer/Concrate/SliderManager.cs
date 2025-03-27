@@ -20,17 +20,17 @@ namespace SignalR.BusinessLayer.Concrate
 
         public void Tadd(Slider entity)
         {
-            throw new NotImplementedException();
+            _sliderDal.Add(entity);
         }
 
         public void TDelete(Slider entity)
         {
-            throw new NotImplementedException();
+            _sliderDal.Delete(entity);
         }
 
         public Slider TGetById(int id)
         {
-            throw new NotImplementedException();
+            return _sliderDal.GetByID(id);  
         }
 
         public List<Slider> TGetListAll()
@@ -40,7 +40,7 @@ namespace SignalR.BusinessLayer.Concrate
 
         public void Tupdate(Slider entity)
         {
-            throw new NotImplementedException();
+            _sliderDal.Update(entity);
         }
     }
 }
