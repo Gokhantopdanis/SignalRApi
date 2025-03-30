@@ -77,5 +77,15 @@ namespace SignalR.BusinessLayer.Concrate
         {
             return _productDal.ProductPriceByHamburger();
         }
+
+        public decimal TProductPriceBySteakBurger()
+        {
+            return _productDal.ProductPriceBySteakBurger();
+        }
+
+        public decimal TTotalPriceByDrinkCategory()
+        {
+            return _productDal.TotalPriceByDrinkCategory();
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SignalR.BusinessLayer.Abstract;
 using SignalR.DtoLayer.MenuTableDto;
@@ -12,9 +13,12 @@ namespace SignalRApi.Controllers
     {
         private readonly IMenuTableService _menuTableService;
 
-        public MenuTablesController(IMenuTableService menuTableService)
+        private readonly IMapper _mapper;
+
+        public MenuTablesController(IMenuTableService menuTableService, IMapper mapper)
         {
             _menuTableService = menuTableService;
+            _mapper = mapper;
         }
 
         [HttpGet("MenuTableCount")]
@@ -27,18 +31,15 @@ namespace SignalRApi.Controllers
         public IActionResult MenuTableList()
         {
             var values = _menuTableService.TGetListAll();
-            return Ok(values);
+            return Ok(_mapper.Map<List<ResultMenuTableDto>>(values));
         }
 
         [HttpPost]
         public IActionResult CreateMenuTable(CreateMenuTableDto createMenuTableDto)
         {
-            MenuTable menuTable = new MenuTable()
-            {
-                Name = createMenuTableDto.Name,
-                Status= false,
-            };
-            _menuTableService.Tadd(menuTable);
+            createMenuTableDto.Status = false;
+            var value = _mapper.Map<MenuTable>(createMenuTableDto);
+            _menuTableService.Tadd(value);
             return Ok("Masa kısmı başarılı bir şekilde eklendi");
         }
 
@@ -53,13 +54,8 @@ namespace SignalRApi.Controllers
         [HttpPut]
         public IActionResult UpdateMenuTable(UpdateMenuTableDto updateMenuTableDto)
         {
-            MenuTable menuTable = new MenuTable()
-            {
-                MenuTableID = updateMenuTableDto.MenuTableID,
-                Name = updateMenuTableDto.Name,
-                Status = false
-            };
-            _menuTableService.Tupdate(menuTable);
+            var value = _mapper.Map<MenuTable>(updateMenuTableDto);
+            _menuTableService.Tupdate(value);
             return Ok("Masa alanı güncellendi");
         }
 
@@ -67,7 +63,7 @@ namespace SignalRApi.Controllers
         public IActionResult GetMenuTable(int id)
         {
             var value = _menuTableService.TGetById(id);
-            return Ok(value);
+            return Ok(_mapper.Map<GetMenuTableDto>(value));
         }
     }
 }

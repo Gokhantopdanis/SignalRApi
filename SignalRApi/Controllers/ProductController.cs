@@ -87,18 +87,23 @@ namespace SignalRApi.Controllers
             return Ok(_productService.TProductPriceByHamburger());
         }
 
+        [HttpGet("ProductPriceBySteakBurger")]
+        public IActionResult ProductPriceBySteakBurger()
+        {
+            return Ok(_productService.TProductPriceBySteakBurger());
+        }
+
+        [HttpGet("TotalPriceByDrinkCategory")]
+        public IActionResult TotalPriceByDrinkCategory()
+        {
+            return Ok(_productService.TTotalPriceByDrinkCategory());
+        }
+
         [HttpPost]
         public IActionResult CreateProduct(CreateProductDto createProductDto)
         {
-            _productService.Tadd(new Product()
-            {
-                ProductName = createProductDto.ProductName,
-                Description = createProductDto.Description,
-                Price = createProductDto.Price,
-                ImageUrl = createProductDto.ImageUrl,
-                ProductStatus = createProductDto.ProductStatus,
-                CategoryID = createProductDto.CategoryID
-            });
+            var value = _mapper.Map<Product>(createProductDto);
+            _productService.Tadd(value);
             return Ok("Ürün Bilgisi Eklendi");
         }
 
@@ -114,22 +119,14 @@ namespace SignalRApi.Controllers
         public IActionResult GetProduct(int id)
         {
             var value = _productService.TGetById(id);
-            return Ok(value);
+            return Ok(_mapper.Map<GetProductDto>(value));
         }
 
         [HttpPut]
         public IActionResult UpdateProduct(UpdateProductDto updateProductDto)
         {
-            _productService.Tupdate(new Product()
-            {
-                ProductStatus = updateProductDto.ProductStatus,
-                ProductName = updateProductDto.ProductName,
-                Description = updateProductDto.Description,
-                Price = updateProductDto.Price,
-                ImageUrl = updateProductDto.ImageUrl,
-                ProductID = updateProductDto.ProductID,
-                CategoryID=updateProductDto.CategoryID
-            });
+            var value = _mapper.Map<Product>(updateProductDto);
+            _productService.Tupdate(value);
             return Ok("Ürün Güncellendi");
         }
     }

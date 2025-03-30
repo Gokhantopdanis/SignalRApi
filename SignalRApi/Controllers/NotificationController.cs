@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SignalR.BusinessLayer.Abstract;
 using SignalR.DataAccessLayer.Abstract;
@@ -13,15 +14,19 @@ namespace SignalRApi.Controllers
     {
         private readonly INotificationService _notificationService;
 
-        public NotificationController(INotificationService notificationService)
+        private readonly IMapper _mapper;
+
+        public NotificationController(INotificationService notificationService, IMapper mapper)
         {
             _notificationService = notificationService;
+            _mapper = mapper;
         }
 
         [HttpGet]
         public IActionResult NotificationList()
         {
-            return Ok(_notificationService.TGetListAll());
+            var value = _notificationService.TGetListAll();
+            return Ok(_mapper.Map<List<ResultNotificationDto>>(value));
         }
 
         [HttpGet("NotificationCountByStatusFalse")]
@@ -39,16 +44,11 @@ namespace SignalRApi.Controllers
         [HttpPost]
         public IActionResult CreateNotification(CreateNotificationDto createNotificationDto)
         {
-            Notification notification = new Notification()
-            {
-                Description = createNotificationDto.Description,
-                Icon = createNotificationDto.Icon,
-                Status = false,
-                Type = createNotificationDto.Type,
-                Date = Convert.ToDateTime(DateTime.Now.ToShortDateString()),
-            };
-            _notificationService.Tadd(notification);
-            return Ok(notification);
+            createNotificationDto.Status = false;
+            createNotificationDto.Date = Convert.ToDateTime(DateTime.Now.ToShortDateString());
+            var value = _mapper.Map<Notification>(createNotificationDto);
+            _notificationService.Tadd(value);
+            return Ok("notification");
         }
 
         [HttpDelete("{id}")]
@@ -63,22 +63,14 @@ namespace SignalRApi.Controllers
         public IActionResult GetNotification(int id)
         {
             var value = _notificationService.TGetById(id);
-            return Ok(value);
+            return Ok(_mapper.Map<GetNotificationDto>(value));
         }
 
         [HttpPut]
         public IActionResult UpdateNotification(UpdateNotificationDto updateNotificationDto)
         {
-            Notification notification = new Notification()
-            {
-                NotificationID = updateNotificationDto.NotificationID,
-                Description = updateNotificationDto.Description,
-                Icon = updateNotificationDto.Icon,
-                Status = updateNotificationDto.Status,
-                Type = updateNotificationDto.Type,
-                Date = updateNotificationDto.Date,
-            };
-            _notificationService.Tupdate(notification);
+            var value = _mapper.Map<Notification>(updateNotificationDto);      
+            _notificationService.Tupdate(value);
             return Ok("güncelleme başarılı");
         }
 

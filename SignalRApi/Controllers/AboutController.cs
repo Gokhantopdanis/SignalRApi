@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using SignalR.BusinessLayer.Abstract;
 using SignalR.DtoLayer.AboutDto;
 using SignalR.EntityLayer.Entities;
@@ -11,28 +12,26 @@ namespace SignalRApi.Controllers
     {
         private readonly IAboutService _aboutService;
 
-        public AboutController(IAboutService aboutService)
+        private readonly IMapper _mapper;
+
+        public AboutController(IAboutService aboutService, IMapper mapper)
         {
             _aboutService = aboutService;
+            _mapper = mapper;
         }
 
         [HttpGet]
         public IActionResult AboutList()
         {
             var values = _aboutService.TGetListAll();
-            return Ok(values);
+            return Ok(_mapper.Map<List<ResultAboutDto>>(values));
         }
 
         [HttpPost]
         public IActionResult CreateAbout(CreateAboutDto createAboutDto)
         {
-            About about = new About()
-            {
-                Title = createAboutDto.Title,
-                Description = createAboutDto.Description,
-                ImageUrl = createAboutDto.ImageUrl
-            };
-            _aboutService.Tadd(about);
+            var value = _mapper.Map<About>(createAboutDto);
+            _aboutService.Tadd(value);
             return Ok("Hakkımda kısmı başarılı bir şekilde eklendi");
         }
 
@@ -47,14 +46,8 @@ namespace SignalRApi.Controllers
         [HttpPut]
         public IActionResult UpdateAbout(UpdateAboutDto updateAboutDto)
         {
-            About about = new About()
-            {
-                AboutID = updateAboutDto.AboutID,
-                Title = updateAboutDto.Title,
-                Description = updateAboutDto.Description,
-                ImageUrl = updateAboutDto.ImageUrl
-            };
-            _aboutService.Tupdate(about);
+            var value = _mapper.Map<About>(updateAboutDto);
+            _aboutService.Tupdate(value);
             return Ok("hakkımda alanı güncellendi");
         }
 
@@ -62,7 +55,7 @@ namespace SignalRApi.Controllers
         public IActionResult GetAbout(int id)
         {
             var value = _aboutService.TGetById(id);
-            return Ok(value);
+            return Ok(_mapper.Map<GetAboutDto>(value));
         }
     }
 }
