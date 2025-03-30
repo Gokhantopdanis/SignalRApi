@@ -87,5 +87,10 @@ namespace SignalR.BusinessLayer.Concrate
         {
             return _productDal.TotalPriceByDrinkCategory();
         }
+
+        public List<Product> TGetLast9Products()
+        {
+            return _productDal.GetLast9Products();
+        }
     }
 }

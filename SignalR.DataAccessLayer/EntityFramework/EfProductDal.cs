@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Windows.Markup;
+using Microsoft.EntityFrameworkCore;
 using SignalR.DataAccessLayer.Abstract;
 using SignalR.DataAccessLayer.Concrete;
 using SignalR.DataAccessLayer.Repositories;
@@ -10,6 +11,13 @@ namespace SignalR.DataAccessLayer.EntityFramework
     {
         public EfProductDal(SignalRContext context) : base(context)
         {
+        }
+
+        public List<Product> GetLast9Products()
+        {
+            using var context = new SignalRContext();
+            var values = context.Products.Take(9).ToList();
+            return values;
         }
 
         public List<Product> GetProdcutsWithCategories()
