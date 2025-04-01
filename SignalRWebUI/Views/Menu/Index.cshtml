@@ -22,21 +22,21 @@
 
             <ul class="filters_menu">
                 <li class="active" data-filter="*">Tümü</li>
-                <li data-filter=".burger">Hamburger</li>
-                <li data-filter=".pizza">Pizza</li>
-                <li data-filter=".pasta">Makarna</li>
-                <li data-filter=".fries">Atıştırmalık</li>
-                <li data-filter=".fries">Salatalar</li>
-                <li data-filter=".fries">Atıştırmalık</li>
-                <li data-filter=".fries">İçecekler</li>
-                <li data-filter=".fries">Tatlılar</li>
+                <li data-filter=".Hamburger">Hamburger</li>
+                <li data-filter=".Pizza">Pizza</li>
+                <li data-filter=".Makarna">Makarna</li>
+                <li data-filter=".Atıştırmalık">Atıştırmalık</li>
+                <li data-filter=".Salatalar">Salatalar</li>
+                <li data-filter=".Atıştırmalık">Atıştırmalık</li>
+                <li data-filter=".İçecekler">İçecekler</li>
+                <li data-filter=".Tatlılar">Tatlılar</li>
             </ul>
 
             <div class="filters-content">
                 <div class="row grid">
                     @foreach(var item in Model)
                     {
-                        <div class="col-sm-6 col-lg-4 all pizza">
+                        <div class="col-sm-6 col-lg-4 all @item.CategoryName">
                             <div class="box">
                                 <div>
                                     <div class="img-box">
@@ -53,7 +53,7 @@
                                             <h6>
                                                 @item.Price
                                             </h6>
-                                            <a href="#" onclick="showproductid(@item.ProductID)">
+                                            <a href="#" onclick="showproductid(@item.ProductID, @ViewBag.v)">
                                                 <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 456.029 456.029" style="enable-background:new 0 0 456.029 456.029;" xml:space="preserve">
                                                 <g>
                                                 <g>
@@ -127,18 +127,23 @@
     @await Component.InvokeAsync("_UILayoutScriptComponentPartial")
 
     <script>
-        function showproductid(value) {
-            var id = value;
+        function showproductid(productId, menuTableId) {
             $.ajax({
                 type: 'POST',
-                url: "/Menu/AddBasket/" + id,
-                data: { item: id },
-                contentType: 'json',
+                url: "/Menu/AddBasket",
+                data: {
+                    id: productId,
+                    menuTableId: menuTableId // MenuTableId burada gönderiliyor
+                },
                 success: function () {
-                    swal("Seçilen Ürün ID: " + id, "ürünü seçtiniz!", "success");
+                    swal("Seçilen Ürün ID:" + productId, "Seçtiğiniz Ürün Sepete Eklendi!", "success");
+                },
+                error: function (xhr, status, error) {
+                    console.error("Hata:", error);
+                    console.log("Yanıt:", xhr.responseText);
                 }
             });
-        }
+        };
     </script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
